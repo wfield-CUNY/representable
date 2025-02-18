@@ -1,0 +1,29 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="container">
+  <div class="row my-5">
+    <div class="col-9 mx-auto">
+      <h2>
+        {{object.name}}
+        {% if object.verified %}
+          <img class="img-fluid verified-logo" src="{% static 'img/verified.svg' %}" alt="verified check mark"></img>
+        {% endif %}
+      </h2>
+      <hr>
+      <p>
+        {% for state in object.states %}
+        <span class="badge badge-secondary">{{state}}</span>
+        {% endfor %}
+      </p>
+      <p>{{object.description}}</p>
+      <a class="btn btn-secondary my-3" href="/partners" role="button">{% trans "Return to Partners" %}</a>
+      <a class="btn btn-primary my-3" href="{% url 'main:partner_map' object.slug %}" role="button">{% trans "Link to organization map" %}</a>
+      {% if object.ext_link %}<a class="btn btn-primary" href="{{ object.ext_link }}" role="button">
+        {% trans "Visit Partner Site" %} <i class="fa fa-arrow-circle-right"></i></a>
+      {% endif %}
+    </div>
+    </div>
+{% endblock %}

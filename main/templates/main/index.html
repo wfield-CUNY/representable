@@ -1,0 +1,206 @@
+{% extends 'main/base.html' %}
+{% load leaflet_tags %}
+{% load static %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block head %}
+{% leaflet_js %}
+{% leaflet_css %}
+<!--  Mapbox GL JS-->
+<meta charset='utf-8' />
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+{% endblock %}
+
+<!-- Main Content -->
+{% block content %}
+<div id="home-bg" class="container-fluid">
+  <!-- Illustration -->
+  <div class="row row-hero row-eq-height mt-sm-4 mx-0">
+    <div class="col-12 mobile-padding-x mobile-padding-top text-center">
+      <img class="w-62 align-bottom" src="{% static 'img/home-people.svg' %}" alt="people together holding shapes"> </img>
+      <div class="text-center">
+        <span id="home-mapping-am" class="d-block font-large-mobile font-weight-bold dark-blue-text">{% trans "MAPPING AMERICA" %}</span>
+        <span class="d-block h1 btn-ls-md font-weight-light font-medium-mobile dark-blue-text">{% blocktrans trimmed %} One <b>community</b> at a time. {% endblocktrans %}</span>
+      </div>
+    </div>
+  </div>
+  <div class="row row-hero row-eq-height my-auto mx-0">
+    <div class="col-12 text-center my-auto pt-3">
+      <a id="get-started-btn" class="text-center font-medium-mobile btn btn-primary btn-lg py-3 font-weight-bold btn-ls-lg" href="{% url 'main:state_selection' %}"  role="button">{% trans "GET STARTED" %}</a>
+    </div>
+  </div>
+  <div class="row">
+    <h4 class="mx-auto gray-text my-2">-OR-</h4>
+  </div>
+  <div class="row row-hero row-eq-height my-auto mx-0">
+    <div class="d-none d-md-block col-12 col-md-3"></div>
+    <div class="d-none d-md-block col-12 col-md-6 text-center">
+      <a class="font-medium-mobile btn btn-outline-secondary py-2 btn-ls-md mb-5 mr-2 mt-2 border-solid" style="border-radius: 0;" href="{% url 'main:state_selection_map' %}"  role="button">{% trans "VIEW & EXPORT MAPS" %}</a>
+      <a class="font-medium-mobile btn btn-outline-secondary py-2 btn-ls-md mb-5 mt-2 border-solid" style="border-radius: 0;" href="{% url 'main:partner_welcome' %}"  role="button">{% trans "JOIN AS AN ORG" %}</a>
+    </div>
+    <div class="d-block d-md-none col-12 col-md-6 text-center">
+      <a class="font-medium-mobile btn btn-outline-secondary py-2 btn-ls-md my-2 border-solid" style="border-radius: 0;" href="{% url 'main:state_selection_map' %}"  role="button">{% trans "VIEW & EXPORT MAPS" %}</a>
+    </div>
+    <div class="d-block d-md-none col-12 col-md-6 text-center">
+      <a class="font-medium-mobile btn btn-outline-secondary py-2 btn-ls-md my-2 border-solid" style="border-radius: 0;" href="{% url 'main:partner_welcome' %}"  role="button">{% trans "JOIN AS AN ORG" %}</a>
+    </div>
+    <div class="d-none d-md-block col-12 col-md-3"></div>
+  </div>
+</div>
+  <div class="container-fluid bg-white">
+    <div class="container mb-5">
+      <div class="row gray-text pt-5 px-md-5 mt-5">
+        <div class="col-2">
+          <img class="card-img-top img-fluid m-2 w-100 mx-auto mb-md-4 pt-3 pt-md-0" src="{% static 'img/home-shapes-1.svg' %}" alt="two light shapes"></img>
+        </div>
+        <div class="col-4 my-auto">
+          <h1 class="font-medium-mobile font-weight-bold">{% blocktrans trimmed %} Describe <br>Your Community {% endblocktrans %}</h1>
+          <h3 class="font-small-mobile font-weight-light">{% trans "by identifying shared interests and community needs." %}</h3>
+        </div>
+        <div class="col-2">
+          <img class="card-img-top img-fluid m-2 w-100 mx-auto mb-md-4 pt-3 pt-md-0" src="{% static 'img/home-shapes-3.svg' %}" alt="two light shapes"></img>
+        </div>
+        <div class="col-4 my-auto">
+          <h1 class="font-medium-mobile font-weight-bold">{% blocktrans trimmed %} Draw a <br> Community Map {% endblocktrans %}</h1>
+          <h3 class="font-small-mobile font-weight-light">{% trans "by choosing units that make up your community." %}</h3>
+        </div>
+      </div>
+      <div class="row gray-text pb-md-5">
+        <div class="col-3"></div>
+        <div class="col-2">
+          <img class="card-img-top img-fluid m-2 w-100 mx-auto mb-md-4 pt-3 pt-md-0" src="{% static 'img/home-shapes-2.svg' %}" alt="two light shapes"></img>
+        </div>
+        <div class="col-4 my-auto">
+          <h1 class="font-medium-mobile font-weight-bold">{% blocktrans trimmed %} Share <br>Your Map {% endblocktrans %}</h1>
+          <h3 class="font-small-mobile font-weight-light">{% trans "as public input for map makers to use when drawing new voting districts." %}</h3>
+        </div>
+        <div class="col-3"></div>
+      </div>
+    </div>
+  </div>
+  <div class="row state-maps-bg d-none d-md-block m-0">
+    <div class="container">
+      <div class="row">
+        <div class="col-1"></div>
+        <div class="col-6 my-auto gray-text py-5">
+          <h2 class="mb-3 font-weight-bold mt-4 mt-lg-2">We are mapping America.</h2>
+          <h4>Check out the communities drawn in your state.</h4>
+          <a class="btn font-weight-bold btn-outline-primary mt-3 btn-ls-md border-solid px-4 py-2 mb-4" href="{% url 'main:state_selection_map' %}">
+              {% trans "VIEW COMMUNITIES" %}
+          </a>
+        </div>
+        <div class="col-5">
+          <!-- <img class="img-fluid align-bottom h-100" src="{% static 'img/map-preview.png' %}" alt="preview of Representable's map page"> </img> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- MOBILE ONLY -->
+  <div class="container state-maps-bg d-block d-md-none mt-4">
+    <div class="row">
+      <h2 class="mb-3 font-weight-bold mt-4 mt-lg-2 mx-auto">We are mapping America.</h2>
+      <h5 class="mx-5 px-4 text-center">Check out the communities drawn in your state.</h5>
+      <a class="mx-auto btn btn-outline-primary font-weight-bold mt-3 btn-ls-md border-solid px-4 py-2 mb-4 mb-lg-2" href="{% url 'main:state_selection_map' %}">
+          {% trans "VIEW COMMUNITIES" %}
+      </a>
+    </div>
+  </div>
+  <div class="container">
+    <div class="container">
+      <div class="row my-5 d-none d-md-flex">
+        <div class="col-md-3">
+          <img class="card-img-top img-fluid m-2 w-25 w-sm-100 mx-auto mb-md-4" src="{% static 'img/home-shapes-4.svg' %}" alt="two light shapes"></img>
+        </div>
+        <div class="col-md-6 gray-text px-3">
+          <img class="mx-auto d-block w-21 py-5" src="{% static 'img/logo-gradient.svg' %}" alt="representable logo - continental USA made of blocks"> </img>
+          <h5 class="pt-3 font-medium-mobile font-weight-light">{% blocktrans trimmed %}<b>Our mission is to give communities a voice in drawing voting districts.</b> Representable allows people to draw Communities of Interest and share information about the interests and needs in those communities.{% endblocktrans %}</h5>
+          <h5 class="py-4 font-weight-light font-small-mobile mb-0">{% blocktrans trimmed %}<br><b>Gerrymandering is threatening democracy.</b> Politicians have been drawing voting districts that silence the voices of communities. This prevents communities from electing representatives that listen to their needs. Gathering Communities of Interest maps helps fight gerrymandering.{% endblocktrans %}</h5>
+          <div class="text-center">
+            <a class="btn btn-outline-primary mt-3 btn-ls-md border-solid px-3 mb-4 mb-lg-2" href="{% url 'main:resources' %}">
+                {% trans "LEARN MORE" %}
+            </a>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <img class="card-img-top img-fluid m-2 w-25 w-sm-100 mx-auto mb-md-4" src="{% static 'img/home-shapes-5.svg' %}" alt="two light shapes"></img>
+        </div>
+      </div>
+      <div class="row my-5 d-flex d-md-none">
+        <div class="col-4">
+          <img class="card-img-top img-fluid m-2 w-100 mx-auto mb-md-4" src="{% static 'img/home-shapes-4.svg' %}" alt="two light shapes"></img>
+        </div>
+        <div class="col-4">
+          <img class="mx-auto d-block w-100 py-5" src="{% static 'img/logo-gradient.svg' %}" alt="representable logo - continental USA made of blocks"> </img>
+        </div>
+        <div class="col-4">
+          <img class="card-img-top img-fluid m-2 w-100 mx-auto mb-md-4" src="{% static 'img/home-shapes-5.svg' %}" alt="two light shapes"></img>
+        </div>
+      </div>
+      <div class="row my-5 d-flex d-md-none">
+        <div class="col gray-text px-3">
+          <h5 class="pt-3 font-medium-mobile font-weight-light">{% blocktrans trimmed %}<b>Our mission is to give communities a voice in drawing voting districts.</b> Representable allows people to draw Communities of Interest and share information about the interests and needs in those communities.{% endblocktrans %}</h5>
+          <h5 class="py-4 font-weight-light font-small-mobile mb-0">{% blocktrans trimmed %}<br><b>Gerrymandering is threatening democracy.</b> Politicians have been drawing voting districts that silence the voices of communities. This prevents communities from electing representatives that listen to their needs. Gathering Communities of Interest maps helps fight gerrymandering.{% endblocktrans %}</h5>
+          <div class="text-center">
+            <a class="btn btn-outline-primary mt-3 btn-ls-md border-solid px-3 mb-4 mb-lg-2" href="{% url 'main:resources' %}">
+                {% trans "LEARN MORE" %}
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-5 mx-md-5 pb-5 px-5">
+        <div class="col-md-4"></div>
+        <div class="col-md-1 text-center py-2 py-md-0">
+          <a href="https://www.facebook.com/Representable.org/" target="_blank"><img class="social-media-logo mx-auto w-md-100 w-lg-75 w-10" src="{% static 'img/facebook-gray-logo.svg' %}" alt="Representable's Facebook page linked from Facebook logo"></img></a>
+        </div>
+        <div class="col-md-1 text-center py-2 py-md-0">
+          <a href="https://www.instagram.com/representable_org/" target="_blank"><img class="social-media-logo mx-auto w-md-100 w-lg-75 w-10" src="{% static 'img/ig-gray-logo.svg' %}" alt="Representable's Instagram page linked from Instagram logo"></img></a>
+        </div>
+        <div class="col-md-1 text-center py-2 py-md-0">
+          <a href="https://twitter.com/representable_" target="_blank"><img class="social-media-logo mx-auto w-md-100 w-lg-75 w-10" src="{% static 'img/twitter-gray-logo.svg' %}" alt="Representable's Twitter page linked from Twitter logo"></img></a>
+        </div>
+        <div class="col-md-1 text-center py-2 py-md-0">
+          <a href="https://www.youtube.com/channel/UCxDe9nogUoC37lAGfoC5ZRw" target="_blank"><img class="social-media-logo mx-auto w-md-100 w-lg-75 w-10" src="{% static 'img/yt-gray-logo.svg' %}" alt="Representable's Youtube page linked from Youtube logo"></img></a>
+        </div>
+        <div class="col-md-4"></div>
+        <div class="text-center mx-auto mt-5">
+          <a id="get-started-btn" class="text-center font-medium-mobile btn btn-outline-primary btn-lg py-3 btn-ls-lg mb-5 mt-2 border-solid" style="border-radius: 0;" href="{% url 'main:state_selection' %}"  role="button">{% trans "GET STARTED" %}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row w-100 m-0 light-blue-bg text-center">
+    <div class="container">
+      <div class="row pt-4">
+        <div class="col-md-3"></div>
+        <div class="col-md-6 text-center">
+          <h3 class="font-medium-mobile btn-ls-lg pt-4 font-weight-bold">OUR PARTNERS</h3>
+          <!-- image of partner organization logos -->
+          <img class="card-img-top img-fluid m-2 mx-auto mb-md-4" src="{% static 'img/partner-logos.png' %}" alt="logos of organizations that partner with representable"></img>
+        </div>
+        <div class="col-md-3"></div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row pt-5">
+      <img class="card-img-top w-62 mt-2 mx-auto mb-0" src="{% static 'img/home-hands.svg' %}" alt="hands holding shapes"></img>
+    </div>
+  </div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+  // Track Front Page Buttons
+  document.getElementById("get-started-btn").addEventListener("click", function() {
+      mixpanel.track("Get Started Pressed");
+  });
+
+  mixpanel.track_links("#edu-guide-link", "Educational Guide Link");
+  mixpanel.track_links("#card-add-community-btn", "Card Add Community Click");
+  mixpanel.track_links("#edu-guide-link-btn", "Card Partner Click");
+  mixpanel.track_links("#hero-partner-btn", "Hero Partner With Us Click");
+  mixpanel.track("Front Page Loaded");
+</script>
+{% endblock %}

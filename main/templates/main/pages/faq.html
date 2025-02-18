@@ -1,0 +1,155 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<div class="container-fluid content-blue-bg">
+  <div class="row row-content mx-lg-5 px-lg-5">
+    <div class="col mx-lg-5 px-lg-5">
+      <div class="row mx-lg-5 px-lg-5">
+        <div class="col-12">
+          <h1>FAQs</h1>
+          <p class="text-muted">{% trans "Check out our most frequently asked questions below." %}</p>
+        </div>
+        <h3 class="blue-text ml-3 mt-3">{% trans "For Community Members" %}</h3>
+        <div class="col-12 my-2 light-blue-bg">
+          <button class="btn ws-normal btn-no-focus-outline bg-transparent text-left pl-0 no-underline-link" type="button" data-target="#faq-question-1" aria-expanded="false" aria-controls="collapseOne" onclick="toggleAngleFaq(this)">
+              <h6 class="mt-2 dropdown-toggle-angle word-break">{% trans "What are the units used to draw my community?" %}<i class="fas fa-angle-down pl-3"></i></h6>
+          </button>
+          <div class="accordion" id="faq-question-1-accordion">
+              <div id="faq-question-1" class="collapse ml-lg-5" aria-labelledby="faq question accordion" data-parent="#faq-question-1-accordion">
+                  <p class="collapse-in mb-lg-4 mt-lg-2">{% trans "The units are Census Block Groups and Census Blocks. Census Block Groups are larger units composed of Census Blocks." %}</p>
+              </div>
+          </div>
+        </div>
+        <div class="col-12 my-2 light-blue-bg">
+          <button class="btn ws-normal btn-no-focus-outline bg-transparent text-left pl-0 no-underline-link" type="button" data-target="#faq-question-2" aria-expanded="false" aria-controls="collapseOne" onclick="toggleAngleFaq(this)">
+              <h6 class="mt-2 dropdown-toggle-angle word-break">{% trans "Can users access this website on their mobile devices?" %}<i class="fas fa-angle-down pl-3"></i></h6>
+          </button>
+          <div class="accordion" id="faq-question-2-accordion">
+              <div id="faq-question-2" class="collapse ml-lg-5" aria-labelledby="faq question accordion" data-parent="#faq-question-2-accordion">
+                  <p class="collapse-in mb-lg-4 mt-lg-2">{% trans "Yes, the website can be accessed on mobile devices including smartphones and tablets." %}</p>
+              </div>
+          </div>
+        </div>
+        <div class="col-12 my-2 light-blue-bg">
+          <button class="btn ws-normal btn-no-focus-outline bg-transparent text-left pl-0 no-underline-link" type="button" data-target="#faq-question-3" aria-expanded="false" aria-controls="collapseOne" onclick="toggleAngleFaq(this)">
+              <h6 class="mt-2 dropdown-toggle-angle word-break">{% trans "Are there plans to translate the website into additional languages?" %}<i class="fas fa-angle-down pl-3"></i></h6>
+          </button>
+          <div class="accordion" id="faq-question-3-accordion">
+              <div id="faq-question-3" class="collapse ml-lg-5" aria-labelledby="faq question accordion" data-parent="#faq-question-3-accordion">
+                  <p class="collapse-in mb-lg-4 mt-lg-2">{% trans "Yes! The site is currently translated into Spanish, Arabic, and Hmong, and we have plans to expand upon these translations. If there is a specific language that is vital to your usage of our tool, please let us know at <a href='mailto:team@representable.org' style='text-decoration:none'><u>team@representable.org</u></a>." %}</p>
+              </div>
+          </div>
+        </div>
+        <div class="col-12 my-2 light-blue-bg">
+          <button class="btn ws-normal btn-no-focus-outline bg-transparent text-left pl-0 no-underline-link" type="button" data-target="#faq-question-4" aria-expanded="false" aria-controls="collapseOne" onclick="toggleAngleFaq(this)">
+              <h6 class="mt-2 dropdown-toggle-angle word-break">{% trans "Will Representable.org continue to be a free tool?" %}<i class="fas fa-angle-down pl-3"></i></h6>
+          </button>
+          <div class="accordion" id="faq-question-4-accordion">
+              <div id="faq-question-4" class="collapse ml-lg-5" aria-labelledby="faq question accordion" data-parent="#faq-question-4-accordion">
+                  <p class="collapse-in mb-lg-4 mt-lg-2">{% trans "Yes! Representable.org was created to be an accessible way to increase public input from all communities in the redistricting process. It will always be a free tool." %}</p>
+              </div>
+          </div>
+        </div>
+        <div class="col-12 my-2 light-blue-bg">
+          <button class="btn ws-normal btn-no-focus-outline bg-transparent text-left pl-0 no-underline-link" type="button" data-target="#faq-question-5" aria-expanded="false" aria-controls="collapseOne" onclick="toggleAngleFaq(this)">
+              <h6 class="mt-2 dropdown-toggle-angle word-break">{% trans "Why are data layers, such as demographic information, only available <em>after</em> I draw my community?" %}<i class="fas fa-angle-down pl-3"></i></h6>
+          </button>
+          <div class="accordion" id="faq-question-5-accordion">
+              <div id="faq-question-5" class="collapse ml-lg-5" aria-labelledby="faq question accordion" data-parent="#faq-question-5-accordion">
+                  <p class="collapse-in mb-lg-4 mt-lg-2">{% trans "Before users draw their maps, we present guiding questions so that they can tell mapmakers the shared values and location of their community. This testimony can include demographic information. But after rounds of usability testing and interviews with mapmakers, the Representable team found that it was best to present this information as an analytical layer that is visible after people draw their maps. <br> The COI data collected from our tool is meant to be one-layer of information during the redistricting process. If you would like to see this COI data in conversation with demographic data, you can export the COI maps you collected as a GEOJson file and analyze this data in another mapping software. " %}</p>
+              </div>
+          </div>
+        </div>
+        <div class="col-12 my-2 light-blue-bg">
+          <button class="btn ws-normal btn-no-focus-outline bg-transparent text-left pl-0 no-underline-link" type="button" data-target="#faq-question-6" aria-expanded="false" aria-controls="collapseOne" onclick="toggleAngleFaq(this)">
+              <h6 class="mt-2 dropdown-toggle-angle word-break">{% trans "Can I edit my community map after I have submitted it?" %}<i class="fas fa-angle-down pl-3"></i></h6>
+          </button>
+          <div class="accordion" id="faq-question-6-accordion">
+              <div id="faq-question-6" class="collapse ml-lg-5" aria-labelledby="faq question accordion" data-parent="#faq-question-6-accordion">
+                  <p class="collapse-in mb-lg-4 mt-lg-2">{% trans "Currently, Representable does not have the functionality to go back and edit the text of community maps. However, you can access your previously created communities at any time. If you&rsquo;d like to make a change to your community map, you can delete your previously drawn community and re-draw it with the updated community information!" %}</p>
+              </div>
+          </div>
+        </div>
+        <!-- FOR AFTER EDITING IS ADDED - remove d-none -->
+        <div class="d-none col-12 my-2 light-blue-bg">
+          <button class="btn ws-normal btn-no-focus-outline bg-transparent text-left pl-0 no-underline-link" type="button" data-target="#faq-question-6" aria-expanded="false" aria-controls="collapseOne" onclick="toggleAngleFaq(this)">
+              <h6 class="mt-2 dropdown-toggle-angle word-break">{% trans "Can I edit my community map after I have submitted it?" %}<i class="fas fa-angle-down pl-3"></i></h6>
+          </button>
+          <div class="accordion" id="faq-question-6-accordion">
+              <div id="faq-question-6" class="collapse ml-lg-5" aria-labelledby="faq question accordion" data-parent="#faq-question-6-accordion">
+                  <p class="collapse-in mb-lg-4 mt-lg-2">{% trans "You can edit your community for 24 hours after submitting it to Representable. If you would like more time to edit your community, select “Save as Draft” when you finish mapping. This will allow you to go back  and edit your community, as well as add collaborators. After you are done editing, you will need to submit your community." %}</p>
+              </div>
+          </div>
+        </div>
+        <div class="d-none col-12 my-2 light-blue-bg">
+          <button class="btn ws-normal btn-no-focus-outline bg-transparent text-left pl-0 no-underline-link" type="button" data-target="#faq-question-6" aria-expanded="false" aria-controls="collapseOne" onclick="toggleAngleFaq(this)">
+              <h6 class="mt-2 dropdown-toggle-angle word-break">{% trans "Can I draw a community in collaboration with someone?" %}<i class="fas fa-angle-down pl-3"></i></h6>
+          </button>
+          <div class="accordion" id="faq-question-6-accordion">
+              <div id="faq-question-6" class="collapse ml-lg-5" aria-labelledby="faq question accordion" data-parent="#faq-question-6-accordion">
+                  <p class="collapse-in mb-lg-4 mt-lg-2">{% trans "Yes! When you start the mapping process, you have the ability to select the \“add collaborators\” button. After you finish drawing your portion of the community and save it, your collaborators will have access to the testimony and community portion that you drew." %}</p>
+              </div>
+          </div>
+        </div>
+        <!-- FOR AFTER ENDORSEMENT IS ADDED - remove d-none -->
+        <div class="d-none col-12 my-2 light-blue-bg">
+          <button class="btn ws-normal btn-no-focus-outline bg-transparent text-left pl-0 no-underline-link" type="button" data-target="#faq-question-6" aria-expanded="false" aria-controls="collapseOne" onclick="toggleAngleFaq(this)">
+              <h6 class="mt-2 dropdown-toggle-angle word-break">{% trans "In addition to drawing a map, what else can I do with Representable?" %}<i class="fas fa-angle-down pl-3"></i></h6>
+          </button>
+          <div class="accordion" id="faq-question-6-accordion">
+              <div id="faq-question-6" class="collapse ml-lg-5" aria-labelledby="faq question accordion" data-parent="#faq-question-6-accordion">
+                  <p class="collapse-in mb-lg-4 mt-lg-2">{% trans "You can browse all of the communities drawn in your state <a href='https://www.representable.org/state_selection/map'>here.</a> Also, if someone else has drawn a community on Representable with which you identify, you can contribute your own comments to that map. The original creator of the map will be notified of your submission." %}</p>
+              </div>
+          </div>
+        </div>
+        <h3 class="blue-text ml-3 mt-3">{% trans "For Organizations" %}</h3>
+        <div class="col-12 my-2 light-blue-bg">
+          <button class="btn ws-normal btn-no-focus-outline bg-transparent text-left pl-0 no-underline-link" type="button" data-target="#faq-question-7" aria-expanded="false" aria-controls="collapseOne" onclick="toggleAngleFaq(this)">
+              <h6 class="mt-2 dropdown-toggle-angle word-break">{% trans "My organization has decided that we want to use the tool, what are the next steps?" %}<i class="fas fa-angle-down pl-3"></i></h6>
+          </button>
+          <div class="accordion" id="faq-question-7-accordion">
+              <div id="faq-question-7" class="collapse" aria-labelledby="faq question accordion" data-parent="#faq-question-7-accordion">
+                  <p class="collapse-in ml-4">{% trans "Welcome to Representable! Please look over our <a href='https://drive.google.com/file/d/1NHkU_SazAHgF2rv7-9we13rsBonv8s5S/view' style='text-decoration:none'><u>organization toolkit</u></a> for information about the tool, community mapping drives, hosting training sessions, and much more. Additionally, if you go to the resources tab of our website, you will find sample training slides, infographics, and educational materials to support you throughout the process. If you have any more questions, feel free to reach out to the team at <a href='mailto:team@representable.org' style='text-decoration:none'><u>team@representable.org</u></a>.&nbsp;" %}</p>
+              </div>
+          </div>
+        </div>
+        <div class="col-12 my-2 light-blue-bg">
+          <button class="btn ws-normal btn-no-focus-outline bg-transparent text-left pl-0 no-underline-link" type="button" data-target="#faq-question-8" aria-expanded="false" aria-controls="collapseOne" onclick="toggleAngleFaq(this)">
+              <h6 class="mt-2 dropdown-toggle-angle word-break">{% trans "How is Representable different from other mapping software systems?" %}<i class="fas fa-angle-down pl-3"></i></h6>
+          </button>
+          <div class="accordion" id="faq-question-8-accordion">
+              <div id="faq-question-8" class="collapse" aria-labelledby="faq question accordion" data-parent="#faq-question-8-accordion">
+                  <p class="collapse-in ml-4">{% trans "Representable.org is a free tool which <u>solely</u> focuses on drawing communities of interest. Additionally, only Representable has mapping drives for organizing community maps and the structured questions before drawing the map (i.e. &quot;Economic Interests&quot;, &quot;Community Activities&quot;, etc). We also heavily prioritize a friendly user interface that works as both a tool for collecting public input and educating users.</p> <p class='ml-4'>Lastly, Representable is a very malleable tool, and we can add features for your state/organization specifically! Usually, this includes additional boundaries that you would like to see under the &quot;data layers&#39;&#39; feature of our tool." %}</p>
+              </div>
+          </div>
+        </div>
+        <div class="col-12 my-2 light-blue-bg">
+          <button class="btn ws-normal btn-no-focus-outline bg-transparent text-left pl-0 no-underline-link" type="button" data-target="#faq-question-10" aria-expanded="false" aria-controls="collapseOne" onclick="toggleAngleFaq(this)">
+              <h6 class="mt-2 dropdown-toggle-angle word-break">{% trans "How can I use the information gathered from Representable?" %}<i class="fas fa-angle-down pl-3"></i></h6>
+          </button>
+          <div class="accordion" id="faq-question-10-accordion">
+              <div id="faq-question-10" class="collapse" aria-labelledby="faq question accordion" data-parent="#faq-question-10-accordion">
+                  <p class="collapse-in ml-4">{% trans "Our <a href='https://drive.google.com/file/d/1NHkU_SazAHgF2rv7-9we13rsBonv8s5S/view' style='text-decoration:none'><u>organization toolkit</u></a> outlines several possibilities for how to most effective use COI data collected with our tool! If you would like to speak with a Representable team member about what would work best in your specific case, please reach out to us at <a href='mailto:team@representable.org' style='text-decoration:none'><u>team@representable.org</u></a>." %}</p>
+              </div>
+          </div>
+        </div>
+        <div class="col-12 my-2 light-blue-bg">
+          <button class="btn ws-normal btn-no-focus-outline bg-transparent text-left pl-0 no-underline-link" type="button" data-target="#faq-question-11" aria-expanded="false" aria-controls="collapseOne" onclick="toggleAngleFaq(this)">
+              <h6 class="mt-2 dropdown-toggle-angle word-break">{% trans "What mapping systems are compatible with Representable?" %}<i class="fas fa-angle-down pl-3"></i></h6>
+          </button>
+          <div class="accordion" id="faq-question-11-accordion">
+              <div id="faq-question-11" class="collapse" aria-labelledby="faq question accordion" data-parent="#faq-question-11-accordion">
+                  <p class="collapse-in ml-4">{% trans "You can upload a GEOJSON file of the COI data collected from Representable into several mapping systems! They include Maptitude, ESRI, and Dave's Redistricting App. Additionally, you can upload a CSV (or Block Equivalency file) from Representable to these platforms and DistrictBuilder for mapping and analysis." %}</p>
+              </div>
+          </div>
+        </div>
+        <div class="col-12 small px-5 py-4">{% trans "Have more questions? Email us at " %}<a href="mailto:team@representable.org">team@representable.org</a>.</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript" src="{% static 'main/js/components/dropdown.js' %}"></script>
+{% endblock %}

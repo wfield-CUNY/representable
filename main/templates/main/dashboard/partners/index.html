@@ -1,0 +1,196 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="container-fluid px-1 px-lg-5 py-3 light-blue-bg">
+  <div class="col-sm">
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        <div class="alert alert-success">
+          <strong>{% trans "Admin email added!" %}</strong>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+  <div class="row mt-1">
+    <div class="col-12 col-lg-5 col-xl-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-0"></div> <!-- for the organization image -->
+            <div class="col-6 order-first">
+              <div class="row">
+                <div class="col-12">
+                  <h5>{{ object.name}}
+                  {% if object.verified %}
+                  <img class="ml-1 pb-1 img-fluid verified-logo" src="{% static 'img/verified.svg' %}" alt="verified check mark"></img>
+                  {% endif %}
+                  </h5>
+                </div>
+                <div class="col-12">
+                  <p> <span class="strong text-5996D2">{% trans "States" %}:
+                    {% for state in object.states %}
+                    <span class="badge badge-secondary">{{state}}</span>
+                    {% endfor %}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-3"></div>
+            <div class="col-3">
+              {% if is_org_admin %}
+              <button class="btn btn-danger float-right" data-toggle="modal" data-target="#deleteOrgConfirm">
+                <i class="fas fa-trash"></i>
+              </button>
+              {% endif %}
+            </div>
+
+          </div>
+          {% comment %} {% if is_org_admin %}
+          <button class="btn btn-danger float-right mt-4" data-toggle="modal" data-target="#deleteOrgConfirm">
+            <i class="fas fa-trash"></i>
+          </button>
+          {% endif %} {% endcomment %}
+          <p class="scrollable"><span class="text-5996D2">{% trans "Description" %}:</span> {{ object.description }} </p>
+
+          <div class="row">
+            <div class="col-6">
+              <a href="{% url 'main:edit_org' object.slug  object.pk %}" class="btn btn-sm btn-outline-primary w-100 btn-ls-md" role="button">{% trans "EDIT DETAILS" %}</a>
+            </div>
+            <div class="col-6 text-right">
+              <a href="{% url 'main:manage_org' object.slug  object.pk %}" class="btn btn-sm btn-outline-primary w-100 btn-ls-md" role="button">{% trans "ADD ADMINS" %}</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-7 col-xl-8 pt-3 pt-xl-0">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body h-100">
+          <h5>
+            {% trans "Community Mapping Drives" %}
+          </h5>
+          <div class="row">
+            <div class="col-12">
+              {% if drives %}
+              <ul class="list-group org-dash-drive-group scrollable my-3 mb-5">
+                {% for drive in drives %}
+                <li class="border-0 light-blue-bg list-group-item d-flex justify-content-between align-items-center mb-4">
+                  {{ drive.name }}
+                  <a class="btn btn-outline-primary border-0" href="{% url 'main:drive_home' object.slug  object.pk drive.id %}" role="button">{% trans "Manage" %}</a>
+                </li>
+                {% endfor %}
+              </ul>
+              {% else %}
+              <p class="my-3">{% blocktrans %}You haven't created any community mapping drives for this organization.
+                a new one below to start collecting data.{% endblocktrans %}</p>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="text-center pt-3 org-card-btn">
+            <a class="btn btn-outline-primary btn-ls-md" href="{% url 'main:create_drive' object.slug  object.pk %}" role="button">{% trans "CREATE NEW" %}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row pb-3">
+    <div class="col-12 col-md-4">
+      <div class="card h-100 border-0 shadow-sm my-3 pb-3">
+        <div class="card-body h-100">
+          <h6 class="text-2A94F4 text-xl-center">
+            <strong>{% trans "1. Download the Representable Toolkit" %}</strong>
+          </h6>
+          <div class="row">
+            <div class="d-none d-xl-block col-xl-2 pt-xl-1 text-right">
+              <i class="fas fa-toolbox org-icon text-2A94F4"></i>
+            </div>
+            <div class="col-12 col-xl-10 pl-xl-2">
+              {% trans "Check out our toolkit to help guide you through the process of collecting maps." %}
+            </div>
+          </div>
+          <div class="text-center pt-3 org-card-btn">
+            <a class="btn btn-primary btn-ls-md" target="_blank" href="https://drive.google.com/file/d/1NHkU_SazAHgF2rv7-9we13rsBonv8s5S/view?usp=sharing" role="button">{% trans "VIEW & DOWNLOAD" %}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4 pt-2 pt-xl-0">
+      <div class="card h-100 border-0 shadow-sm my-3 pb-3">
+        <div class="card-body h-100">
+          <h6 class="text-2A94F4 text-xl-center">
+            <strong>{% trans "2. Create a Community Mapping Drive" %}</strong>
+          </h6>
+          <div class="row">
+            <div class="d-none d-xl-block col-xl-2 pt-xl-1 text-right">
+              <i class="fas fa-home org-icon text-2A94F4"></i>
+            </div>
+            <div class="col-12 col-xl-10 pl-xl-2">
+              {% trans "Create a drive to collect community maps from your members. You can make multiple community mapping drives." %}
+            </div>
+          </div>
+          <div class="text-center pt-3 org-card-btn">
+            <a class="btn btn-primary btn-ls-md" href="{% url 'main:create_drive' object.slug  object.pk %}" role="button">{% trans "CREATE NEW DRIVE" %}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4 pt-2 pt-xl-0">
+      <div class="card h-100 border-0 shadow-sm my-3 pb-3">
+        <div class="card-body h-100">
+          <h6 class="text-2A94F4 text-xl-center">
+            <strong>{% trans "3. View and Share your Maps" %}</strong>
+          </h6>
+          <div class="row">
+            <div class="d-none d-xl-block col-xl-2 pt-xl-1 text-right">
+              <i class="fas fa-share-square org-icon text-2A94F4"></i>
+            </div>
+            <div class="col-12 col-xl-10 pl-xl-2">
+              {% trans "Use this link to share all maps collected by your organization (includes all drives)" %}: <a href="{% url 'main:partner_map' object.slug %}">https://representable.org{% url 'main:partner_map' object.slug %}</a>
+            </div>
+          </div>
+          <div class="text-center pt-3 org-card-btn">
+            <a class="btn btn-primary btn-ls-md" href="{% url 'main:partner_map' object.slug %}" role="button">{% trans "VIEW ALL MAPS" %}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteOrgConfirm" tabindex="-1" role="dialog" aria-labelledby="deleteOrgLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{% trans "Are you sure you want to delete this organization?" %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {% blocktrans trimmed %}
+        This action cannot be undone. All organization information will be permanently deleted. All drives associated with this organization
+        will be permanently deleted. Communities submitted through these drives will not be deleted, but will no longer be associated with the drive
+        or your organization.
+        {% endblocktrans %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans "Cancel" %}</button>
+        <form role="form" id="deleteOrgInfo" method="post" action="delete\">{% csrf_token %}
+          {% comment %} <input type="hidden" name="drive_slug" value="{{ object.slug }}"> {% endcomment %}
+          <button type="submit" class="btn btn-danger" name="Delete">{% trans "Delete organization permanently" %}</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

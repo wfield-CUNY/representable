@@ -1,0 +1,326 @@
+{% extends 'main/base.html' %}
+{% load leaflet_tags %}
+{% load static %}
+{% load representable_extras %}
+{% load i18n %}
+
+
+{% block head %}
+{% leaflet_js %}
+{% leaflet_css %}
+<!-- https://docs.mapbox.com/mapbox-gl-js/example/mapbox-gl-draw/ -->
+<!-- Mapbox GL JS -->
+<meta charset='utf-8' />
+<title>View Communities</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--  GeoCoder -->
+<meta name='robots' content='noindex, nofollow'>
+<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.1.0/mapbox-gl-geocoder.min.js'></script>
+<link rel='stylesheet'
+href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.1.0/mapbox-gl-geocoder.css' type='text/css' />
+<!-- Add css again to take precedence over mapbox css. -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<!--  Custom CSS -->
+<link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row row-wide">
+    <div>
+      <script type="text/javascript">
+        var coidata = '{{ entries | escapejs }}';
+        var state = '{{ state }}'
+        var mapbox_user_name = "{{mapbox_user_name}}";
+        var numBlock = '{{ numBlock | escapejs }}';
+        var numBG = '{{ numBG | escapejs }}';
+        var comms_counter = '{{comms_counter}}';
+      </script>
+    </div>
+    <div class="col-md-4 col-wide">
+      <nav id='menu'>
+        <div class="sidenav">
+          <div class="accordion" id="accordionExample">
+            <div class="card">
+              <div class="my-1">
+                <h4 class="font-weight-light text-center my-2"> {{ organization }}
+                  {% if organization.verified %}
+                    <img class="verified-logo" src="{% static 'img/verified.svg' %}" alt="verified check mark"></img>
+                  {% endif %} </h4>
+                {% if drive %}
+                <p class="font-weight-light text-center">{{ drive }} </p>
+                {% endif %}
+              </div>
+              <div class="row justify-content-center">
+                {% if user.is_authenticated %}
+                  {% if drive %}
+                    {% with export_name=organization|set_export_name:drive %}
+                    <a class="mb-2 btn btn-outline-primary btn-canvas mx-auto d-none d-sm-block" href={{multi_export_link}}/geo/ role="button" download="{{export_name}}_communities.geojson">{% trans "Export All as GeoJSON" %}</a>
+                    <a class="mb-2 btn btn-outline-primary btn-canvas mx-auto d-none d-sm-block" href={{multi_export_link}}/csv/ role="button" download="{{export_name}}_communities.csv">{% trans "Export All as CSV" %}</a>
+                    {% endwith %}
+                  {% else %}
+                    {% with export_name=organization|replace_spaces %}
+                    <a class="mb-2 btn btn-outline-primary btn-canvas mx-auto d-none d-sm-block" href={{multi_export_link}}/geo/ role="button" download="{{export_name}}_communities.geojson">{% trans "Export All as GeoJSON" %}</a>
+                    <a class="mb-2 btn btn-outline-primary btn-canvas mx-auto d-none d-sm-block" href={{multi_export_link}}/csv/ role="button" download="{{export_name}}_communities.csv">{% trans "Export All as CSV" %}</a>
+                    {% endwith %}
+                  {% endif %}
+                {% else %}
+                  <a class="mb-2 btn btn-outline-primary btn-canvas mx-auto d-none d-sm-block" href='{% url "account_login" %}?next={{request.path}}' role="button">{% trans "Export All as GeoJSON" %}</a>
+                  <a class="mb-2 btn btn-outline-primary btn-canvas mx-auto d-none d-sm-block" href='{% url "account_login" %}?next={{request.path}}' role="button">{% trans "Export All as CSV" %}</a>
+                {% endif %}
+              </div>
+              <input class="m-2 p-2 rounded border border-secondary" id="search-comm" type="text" placeholder="Search communities...">
+              <div id="headingOne">
+                <button id="buttonOne" class="viz-dropdown btn btn-light font-weight-light" type="button" data-toggle="collapse" data-target="#collapseOne"
+                aria-expanded="false" aria-controls="collapseOne" style="width: 100%">
+                {% trans "Data layers" %} <i id="arrowOne" class="fas fa-caret-down"></i></button>
+              </div>
+              <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="font-weight-light text-uppercase small" id="outline-menu">
+                </div>
+              </div>
+              <div id="headingTwo">
+                <button id="buttonTwo"class="viz-dropdown btn btn-light font-weight-light" type="button" data-toggle="collapse" data-target="#collapseTwo"
+                aria-expanded="false" aria-controls="collapseTwo" style="width: 100%">
+                {% trans "Election Data" %} <i id="arrowTwo" class="fas fa-caret-down"></i></button>
+              </div>
+              <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                <div class="font-weight-light text-uppercase small" id="election-menu">
+                  <div class="font-weight-light text-uppercase small mb-3" id="no-election-text"></div>
+                </div>
+              </div>
+              <div id="headingTwoAndAHalf">
+                <button id="buttonTwoAndAHalf"class="viz-dropdown btn btn-light font-weight-light" type="button" data-toggle="collapse" data-target="#collapseTwoAndAHalf"
+                aria-expanded="false" aria-controls="collapseTwoAndAHalf" style="width: 100%">
+                {% trans "Demographic Data" %} <i id="arrowTwoAndAHalf" class="fas fa-caret-down"></i></button>
+              </div>
+              <div id="collapseTwoAndAHalf" class="collapse" aria-labelledby="headingTwoAndAHalf" data-parent="#accordionExample">
+                <div class="font-weight-light text-uppercase small" id="demographic-menu">
+                  <br>
+                  <div class="font-weight-light text-uppercase small mb-3" id="demographic-text"></div>
+                </div>
+              </div>
+            </div>
+            <div class="items">
+              <div id="headingThree">
+                <button id="buttonThree" class="viz-dropdown btn btn-light font-weight-light" type="button" data-toggle="collapse" data-target="#coisCollapse"
+                aria-expanded="true" aria-controls="coisCollapse" style="width: 100%">
+                {% trans "Communities" %} <i id="arrowThree" class="fas fa-caret-down flipY-inplace"></i></button>
+              </div>
+              {% if communities %}
+              <div id="coisCollapse" class="collapse show container-fluid py-3 p-0">
+                  <div class="row px-3">
+                    <div class="col-8 col-xl-9">{% trans "Community Information" %}</div>
+                    <div class="col-4 col-xl-3 text-xl-right text-center">{% trans "Only Show" %}</div>
+                  </div>
+                  <hr>
+                  {% comment %} <div class="row">
+                    <div class="col-8 col-xl-10"></div>
+                    <div class="col-4 col-xl-2 text-center">Show All</div>
+                  </div> {% endcomment %}
+                <div id="map-cois">
+                  {% for c in communities %}
+                    {% if is_org_admin or c.admin_approved %}
+                      <div class="row community-review-span py-3 px-3" id="{{c.entry_ID}}">
+                        <div class="col-8 col-xl-10">
+                          <span class="text-uppercase entry-name">
+                            {% with link_text="/submission/"|addstr:c.entry_ID %}
+                            <a href={{link_text}}>{{c.entry_name}}</a>
+                            {% endwith %}
+                          </span>
+                          <hr class="my-1">
+                          {% if drive is None %}
+                          {% if c.drive %}
+                          <span class="badge badge-pill badge-secondary">{{c.drive}}</span>
+                          <br>
+                          {% endif %}
+                          {% endif %}
+                          {% if not c.admin_approved %}
+                            <span class="badge badge-pill badge-danger"> {% trans "Hidden" %} </span>
+                            <br>
+                          {% endif %}
+                          {% if c.private %}
+                            <span class="badge badge-pill badge-primary"> {% trans "Private" %} </span>
+                            <br>
+                          {% endif %}
+                          <span class="small text-muted">
+                          {% if is_org_admin %}
+                            {{ c.user_name }}
+                            <br>
+                          {% endif %}
+                          <a tabindex="0" class="small float-right mt-2" style="color:red" id="report" data-community-id={{c.id}} role="button" data-toggle="modal" data-target="#sendReport"> <span class="sr-only">Danger: </span>REPORT</a>
+                          </span>
+                          <span class="font-weight-light comm-content">
+                            <span class="more-content">
+                              <span class="small">
+                                <span class="text-muted">{{ c.created_at|date:"DATE_FORMAT" }}</span>
+                                <br>
+                                {% if c.population > 0 %}
+                                <b>Population:</b> {{ c.population }}
+                                <br>
+                                {% endif %}
+                                {% if c.tags.all %}
+                                  {% for tag in c.tags.all %}
+                                  <span class="badge badge-pill badge-primary">{{tag}}</span>
+                                  {% endfor %}
+                                  <br>
+                                {% endif %}
+                              </span>
+                              {% if c.cultural_interests %}
+                              <b><i class="fas fa-palette"></i> {% trans "Cultural or Historical Interests" %}</b><br>
+                              <span class="text-muted small">{{c.cultural_interests}}</span>
+                              <br>
+                              {% endif %}
+                              {% if c.comm_activities %}
+                              <b><i class="fas fa-hiking"></i> {% trans "Community Activities and Services" %}</b><br>
+                              <span class="text-muted small">{{c.comm_activities}}</span>
+                              <br>
+                              {% endif %}
+                              {% if c.economic_interests %}
+                              <b><i class="fas fa-comments-dollar"></i> {% trans "Economic or Environmental Interests" %}</b><br>
+                              <span class="text-muted small">{{c.economic_interests}}</span>
+                              <br>
+                              {% endif %}
+                              {% if c.other_considerations %}
+                              <b><i class="fas fa-users"></i> {% trans "Community Needs and Concerns" %}</b><br>
+                              <span class="text-muted small">{{c.other_considerations}}</span>
+                              <br>
+                              {% endif %}
+                            </span>
+                            <u><a class="small read-more small-link" role="button">{% trans "Show More" %}</a></u>
+                          </span>
+                        </div>
+                        <div class="col-4 col-xl-2 my-auto text-center">
+                          <input class="map-checkbox" type="checkbox" value="{{ c.entry_ID }}" onclick="toggleEntryVisibility(this)">
+                        </div>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+                  <div class="row px-3">
+                    <div class="col-8 col-xl-9"></div>
+                    <div class="col-4 col-xl-3 text-center text-xl-right p-0">
+                      <button class="btn btn-link" role="button" onclick="showAllCommunities()">{% trans "Show All" %}</button>
+                    </div>
+                  </div>
+                  <div class="row px-3">
+                    <span class="mx-3 small text-muted"><span id="comms_count">{{ comms_counter }}</span> Communities</span>
+                  </div>
+              </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </nav>
+        </div>
+        <div class="col-md-8 col-map col-wide">
+          <div id='map' class="map-visualization"></div>
+          <button type="button" class="btn btn-outline-secondary mapping-icon mapping-btn py-2 m-1"  style="border-radius: .5rem;" id="map-page-search-btn" data-toggle="button" aria-pressed="false" autocomplete="off">
+              {% trans "Search while moving the map"%}
+          </button>
+        </div>
+      </div>
+    </div>
+
+<!-- Modal -->
+<div class="modal fade" id="sendReport" tabindex="-1" role="dialog" aria-labelledby="sendReport" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{% trans "Report this community" %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form role="form" id="reportForm" method="post" action="/report/"> {% csrf_token %}
+      <div class="modal-body">
+        {% blocktrans trimmed %}
+        If you feel this community is abusive, spam, low-effort, or doesn't live
+        up to our guidelines, send us a report.
+        {% endblocktrans %}
+        <br>
+        {% if is_org_admin %}
+        <br>
+        {% blocktrans trimmed%}
+        As an administrator of this organization, reporting this community will automatically hide it from
+        all non-administrators.
+        {% endblocktrans %}
+        {% endif %}
+        <input type="text" class="hidden" name="org_slug" id="org_slug" value={{organization.slug}}/>
+        <input type="text" class="hidden" name="drive_slug" id="drive_slug" value={{drive_slug}}/>
+        <input type="text" class="hidden" name="is_org_admin" id="is_org_admin" value={{is_org_admin}}/>
+        <input type="text" class="hidden" name="cid" id="cid" value=""/>
+        <label for="email" {% if email.exists %} class="hidden" {% endif %}>{% trans "Email address" %}</label>
+        <input type="email" name="email" id="email" placeholder="Enter email" {% if email.exists %} class="hidden" value={{email.value}} {% endif %} required/>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-dismiss="modal">{% trans "Cancel" %}</button>
+        <button type="submit" class="btn btn-danger"> <span class="sr-only">{% blocktrans trimmed %}Danger: </span>Send Report{% endblocktrans %}</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for report submitted -->
+<div class="modal fade" id="reportSubmitted" tabindex="-1" role="dialog" aria-labelledby="reportSubmitted" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{% trans "Thank you for letting us know!" %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {% trans "Your report was successfully submitted. Thank you." %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="fixURL()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function fixURL() {
+    window.location.href = window.location.href.split('#')[0];
+  }
+</script>
+
+    {% endblock %}
+
+    {% block script %}
+    <!--  Has to be at the end after the HTML loads.-->
+    <script type="text/javascript">
+      mapboxgl.accessToken = "{{ mapbox_key }}";
+    </script>
+    <script type="text/javascript" src="{% static 'main/js/components/keys.js' %}"></script>
+    <script type="text/javascript" src="{% static 'main/js/components/states.js' %}"></script>
+    <script type="text/javascript" src="{% static 'main/feature-lookup-tables/feature-lookup-tables.js'%}"></script>
+    <script type="text/javascript" src="{% static 'main/feature-lookup-tables/state-codes.js'%}"></script>
+    <script type="text/javascript" src="{% static 'main/js/map-common.js' %}"></script>
+    <script type="text/javascript" src="{% static 'main/js/map.js' %}"></script>
+
+    <script>
+    $(document).on("click", "#report", function () {
+         var cid = $(this).data('communityId');
+         $(".modal-body #cid").val( cid );
+    });
+    </script>
+
+    <script>
+      $(document).ready(function() {
+
+        if(window.location.href.indexOf('#reportSubmitted') != -1) {
+            $('#reportSubmitted').modal('show');
+        }
+
+      });
+    </script>
+
+
+    {% endblock %}
