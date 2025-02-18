@@ -1,4 +1,4 @@
-arabic-reshaper==2.1.1
+arabic-reshaper==3.0.0
 astroid==2.3.3
 autopep8==1.4.4
 boto3==1.16.22
@@ -11,8 +11,8 @@ Click==7.0
 defusedxml==0.5.0
 diff-match-patch==20200713
 dj-database-url==0.5.0
-Django==2.2.24
-django-allauth==0.39.1
+Django==5.1.6
+django-allauth==65.4.1
 django-appconf==1.0.3
 django-bmemcached==0.2.4
 django-ckeditor==5.9.0
@@ -53,11 +53,12 @@ licenseheaders==0.6
 MarkupPy==1.14
 MarkupSafe==1.1.1
 mccabe==0.6.1
-numpy==1.17.4
+numpy==2.2.3
 oauthlib==3.0.1
 odfpy==1.4.1
 openpyxl==3.0.5
 packaging==24.0
+##TODO: PICK UP HERE
 pandas==1.1.5
 Pillow==8.3.2
 polib==1.1.1
