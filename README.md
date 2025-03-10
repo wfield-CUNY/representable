@@ -34,3 +34,22 @@ Representable began as a final project for Princeton University course Advanced 
 
 ### License
 Representable is under the GPL-3.0 License.
+
+## 2025 Updates 
+Postgres 17
+Dump and restore db from heroku postgres
+(TODO: Compare with old repo)
+export paths (see current bash_profile)
+typed-ast to ast, which is included with python so can be removed from requirements.txt: https://github.com/python/typed_ast/issues/179
+#Production Email Settings - comment out
+#EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+### Python 3.13
+Change runtime.txt to python 3.13
+
+Change pyenv.cfg
+
+Remove versions from requirements.txt
+
+django.core.exceptions.ImproperlyConfigured: allauth.account.middleware.AccountMiddleware must be added to settings.MIDDLEWARE
+
+ugettext to gettext:https://stackoverflow.com/questions/74826436/importerror-cannot-import-name-ugettext-from-django-utils-translation
