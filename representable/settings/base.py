@@ -270,13 +270,15 @@ elif DATABASES["default"]["ENGINE"] == "django.db.backends.sqlite3":
     ] = "django.contrib.gis.db.backends.spatialite"
 
 # Can Log In With Either Email or Username
-ACCOUNT_AUTHENTICATION_METHOD = "email"
-
+#ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 DEFAULT_FROM_EMAIL = "no-reply@representable.org"
 
-ACCOUNT_EMAIL_VERIFICATION = "optional"
+#ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
 

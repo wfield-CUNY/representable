@@ -171,8 +171,6 @@ Documentation: https://docs.djangoproject.com/en/2.1/topics/class-based-views/
 # View template for both the signing up and signing in
 class RepresentableLoginView(LoginView):
     template_name = "account/signup_login.html"
-    login_form = RepresentableLoginForm()
-    signup_form = RepresentableSignupForm()
     request = None
 
     def dispatch(self, request, *args, **kwargs):
@@ -191,10 +189,10 @@ class RepresentableLoginView(LoginView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["signup_form"] = self.signup_form
-        context["login_form"] = self.login_form
+        context["signup_form"] = RepresentableSignupForm()
+        context["login_form"] = RepresentableLoginForm()
         if "invalid_login" in self.request.session:
-            context["login_error"] = self.login_form.error_messages[
+            context["login_error"] = context["login_form"].error_messages[
                 "email_password_mismatch"
             ]
             del self.request.session["invalid_login"]
@@ -207,8 +205,6 @@ class RepresentableLoginView(LoginView):
 
 class RepresentableSignupView(SignupView):
     template_name = "account/signup_login.html"
-    login_form = RepresentableLoginForm()
-    signup_form = RepresentableSignupForm()
     request = None
 
     def dispatch(self, request, *args, **kwargs):
@@ -231,10 +227,10 @@ class RepresentableSignupView(SignupView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["signup_form"] = self.signup_form
-        context["login_form"] = self.login_form
+        context["signup_form"] = RepresentableSignupForm()
+        context["login_form"] = RepresentableLoginForm()
         if "invalid_login" in self.request.session:
-            context["login_error"] = self.login_form.error_messages[
+            context["login_error"] = context["login_form"].error_messages[
                 "email_password_mismatch"
             ]
             del self.request.session["invalid_login"]
@@ -491,10 +487,13 @@ class Review(LoginRequiredMixin, TemplateView):
 
 
 def SendPlainEmail(request):
+    if request.method != 'POST':
+        return HttpResponseNotFound()
+        
+    post_email = request.POST.get("message")
     # user_email_address = EmailAddress.objects.get(
     #     user=self.request.user
     # )
-    post_email = request.POST.get("message")
     # user_email_address = "edwardtian2000@gmail.com"
 
     email = EmailMessage(
